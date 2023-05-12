@@ -1,19 +1,24 @@
-package sam.sultan.newsapp
+package sam.sultan.newsapp.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import sam.sultan.newsapp.databinding.FragmentMainBinding
+import sam.sultan.newsapp.databinding.FragmentNewsDetailsBinding
 
 class NewsDetailsFragment : Fragment() {
+
+    lateinit var binding: FragmentNewsDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_news_details, container, false)
+        binding = FragmentNewsDetailsBinding.inflate(layoutInflater)
+        return binding.root
     }
 
 }
