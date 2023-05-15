@@ -21,7 +21,11 @@
         android:id="@+id/newsDetailsFragment"
         android:name="sam.sultan.newsapp.ui.NewsDetailsFragment"
         android:label="fragment_news_details"
-        tools:layout="@layout/fragment_news_details" />
+        tools:layout="@layout/fragment_news_details" >
+        <argument
+            android:name="article"
+            app:argType="sam.sultan.newsapp.models.Article" />
+    </fragment>
     <fragment
         android:id="@+id/savedNewsFragment"
         android:name="sam.sultan.newsapp.ui.SavedNewsFragment"

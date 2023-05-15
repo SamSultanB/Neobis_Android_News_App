@@ -3,6 +3,7 @@ package sam.sultan.newsapp
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,6 +15,8 @@ class RecyclerViewAdapter:  RecyclerView.Adapter<RecyclerViewAdapter.ArticleHold
 
     private var newsList: List<Article> = emptyList()
 
+    var clickToDetails: ((Article)->Unit)? = null
+
     class ArticleHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var binding = ItemNewsBinding.bind(itemView)
         fun bind(article: Article, position: Int, size: Int) = with(binding){
@@ -24,6 +27,13 @@ class RecyclerViewAdapter:  RecyclerView.Adapter<RecyclerViewAdapter.ArticleHold
             description.text = article.description
             author.text = article.author
             publishDate.text = article.publishedAt
+
+            val layoutParams = itemView.layoutParams as RecyclerView.LayoutParams
+            if(position == size-1){
+                layoutParams.bottomMargin = 20
+            }else{
+                layoutParams.bottomMargin = 0
+            }
         }
 
     }
@@ -35,6 +45,10 @@ class RecyclerViewAdapter:  RecyclerView.Adapter<RecyclerViewAdapter.ArticleHold
 
     override fun onBindViewHolder(holder: ArticleHolder, position: Int) {
         holder.bind(newsList[position], position, newsList.size)
+        holder.binding.apply {
+            image.setOnClickListener { clickToDetails?.invoke(newsList[position]) }
+            title.setOnClickListener { clickToDetails?.invoke(newsList[position]) }
+        }
     }
 
     override fun getItemCount(): Int {
