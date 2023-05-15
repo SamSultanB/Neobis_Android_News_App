@@ -10,10 +10,10 @@ import sam.sultan.newsapp.models.News
 @Dao
 interface NewsDao {
 
-    @Insert
-    suspend fun saveArticle(article: Article)
-
-    @Query("SELECT * FROM articles")
-    fun getAll(): LiveData<List<Article>>
+//    @Insert
+//    suspend fun saveArticle(article: Article)
+//
+//    @Query("SELECT * FROM articles")
+//    fun getAll(): LiveData<List<Article>>
 
 }

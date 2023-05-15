@@ -5,17 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import sam.sultan.newsapp.MainActivity
+import sam.sultan.newsapp.R
 import sam.sultan.newsapp.RecyclerViewAdapter
-import sam.sultan.newsapp.api.RetrofitInstance
-import sam.sultan.newsapp.database.NewsDataBase
 import sam.sultan.newsapp.databinding.FragmentMainBinding
-import sam.sultan.newsapp.utils.Resource
 import sam.sultan.newsapp.viewModel.NewsViewModel
 
 class MainFragment : Fragment() {
@@ -38,14 +34,39 @@ class MainFragment : Fragment() {
         adapter = RecyclerViewAdapter()
         binding.mainRV.layoutManager = LinearLayoutManager(context)
         binding.mainRV.adapter = adapter
-
         viewModel.getNews()
+        showProgressBar()
+
         viewModel.news.observe(viewLifecycleOwner, Observer{response ->
-            response.body()?.let {
-                adapter.setNewsist(it.articles)
+            if(response.isSuccessful){
+                response.body()?.let {
+                    adapter.setNewsist(it.articles)
+                }
+                hideProgressBar()
+            }else{
+                Toast.makeText(requireContext(), "Connection error!", Toast.LENGTH_SHORT).show()
             }
         })
 
+        //click to details page
+        adapter.clickToDetails = {
+            if(it != null){
+                val bundle = Bundle()
+                bundle.putSerializable("article", it)
+                findNavController().navigate(R.id.action_mainFragment_to_newsDetailsFragment, bundle)
+            }else{
+                Toast.makeText(requireContext(), "Can't find it", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    fun showProgressBar(){
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    fun hideProgressBar(){
+        binding.progressBar.visibility = View.INVISIBLE
     }
 
 }

@@ -1,6 +1,5 @@
 package sam.sultan.newsapp.utils
 
-import sam.sultan.newsapp.R
 
 object Constants {
 
