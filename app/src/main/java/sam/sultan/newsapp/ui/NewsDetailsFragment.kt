@@ -11,13 +11,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavArgs
 import androidx.navigation.NavArgsLazy
 import androidx.navigation.fragment.navArgs
+import sam.sultan.newsapp.database.NewsDataBase
 import sam.sultan.newsapp.databinding.FragmentMainBinding
 import sam.sultan.newsapp.databinding.FragmentNewsDetailsBinding
 import sam.sultan.newsapp.models.Article
+import sam.sultan.newsapp.repository.NewsRepository
+import sam.sultan.newsapp.viewModel.NewsViewModel
+import sam.sultan.newsapp.viewModel.ViewModelFactory
 
 class NewsDetailsFragment : Fragment() {
 
     lateinit var binding: FragmentNewsDetailsBinding
+    lateinit var viewModel: NewsViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,9 +34,9 @@ class NewsDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpViewModel()
 
         val article = arguments?.getSerializable("article") as? Article
-
         if (article == null){
             Toast.makeText(requireContext(), "Can't find", Toast.LENGTH_SHORT).show()
         }else{
@@ -41,6 +46,17 @@ class NewsDetailsFragment : Fragment() {
             }
         }
 
+        binding.saveButton.setOnClickListener {
+            article?.let { it1 -> viewModel.saveArtilce(it1) }
+            Toast.makeText(requireContext(), "Successfully saved!", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun setUpViewModel(){
+        val db = NewsDataBase.getDatabase(requireContext()).getNewsDao()
+        val repository = NewsRepository(db)
+        viewModel = ViewModelProvider(this, ViewModelFactory(repository)).get(NewsViewModel::class.java)
     }
 
 }

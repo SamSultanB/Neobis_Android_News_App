@@ -7,18 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import sam.sultan.newsapp.R
 import sam.sultan.newsapp.RecyclerViewAdapter
+import sam.sultan.newsapp.database.NewsDataBase
 import sam.sultan.newsapp.databinding.FragmentMainBinding
+import sam.sultan.newsapp.repository.NewsRepository
 import sam.sultan.newsapp.viewModel.NewsViewModel
+import sam.sultan.newsapp.viewModel.ViewModelFactory
 
 class MainFragment : Fragment() {
 
     lateinit var binding: FragmentMainBinding
     private lateinit var adapter: RecyclerViewAdapter
-    private var viewModel = NewsViewModel()
+    private lateinit var viewModel: NewsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,12 +35,10 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = RecyclerViewAdapter()
-        binding.mainRV.layoutManager = LinearLayoutManager(context)
-        binding.mainRV.adapter = adapter
-        viewModel.getNews()
-        showProgressBar()
+        setUpViewModel()
+        setUpRV()
 
+        showProgressBar()
         viewModel.news.observe(viewLifecycleOwner, Observer{response ->
             if(response.isSuccessful){
                 response.body()?.let {
@@ -48,24 +50,42 @@ class MainFragment : Fragment() {
             }
         })
 
+        binding.refreshButton.setOnClickListener {
+            showProgressBar()
+            viewModel.refresh()
+            Toast.makeText(requireContext(), "Refresh button is pressed", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.savedButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_savedNewsFragment)
+        }
+
         //click to details page
         adapter.clickToDetails = {
-            if(it != null){
-                val bundle = Bundle()
-                bundle.putSerializable("article", it)
-                findNavController().navigate(R.id.action_mainFragment_to_newsDetailsFragment, bundle)
-            }else{
-                Toast.makeText(requireContext(), "Can't find it", Toast.LENGTH_SHORT).show()
-            }
+            val bundle = Bundle()
+            bundle.putSerializable("article", it)
+            findNavController().navigate(R.id.action_mainFragment_to_newsDetailsFragment, bundle)
         }
 
     }
 
-    fun showProgressBar(){
+    private fun setUpRV(){
+        adapter = RecyclerViewAdapter()
+        binding.mainRV.layoutManager = LinearLayoutManager(context)
+        binding.mainRV.adapter = adapter
+    }
+
+    private fun setUpViewModel(){
+        val db = NewsDataBase.getDatabase(requireContext()).getNewsDao()
+        val repository = NewsRepository(db)
+        viewModel = ViewModelProvider(this, ViewModelFactory(repository)).get(NewsViewModel::class.java)
+    }
+
+    private fun showProgressBar(){
         binding.progressBar.visibility = View.VISIBLE
     }
 
-    fun hideProgressBar(){
+    private fun hideProgressBar(){
         binding.progressBar.visibility = View.INVISIBLE
     }
 

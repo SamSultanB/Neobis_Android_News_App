@@ -18,4 +18,13 @@ data class Article(
     val title: String,
     val url: String,
     val urlToImage: String
-) : java.io.Serializable
+) : java.io.Serializable{
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        if(url.isNullOrEmpty()){
+            result = 31 * result + url.hashCode()
+        }
+        return result
+    }
+}
