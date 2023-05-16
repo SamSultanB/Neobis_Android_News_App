@@ -45,10 +45,7 @@ class RecyclerViewAdapter:  RecyclerView.Adapter<RecyclerViewAdapter.ArticleHold
 
     override fun onBindViewHolder(holder: ArticleHolder, position: Int) {
         holder.bind(newsList[position], position, newsList.size)
-        holder.binding.apply {
-            image.setOnClickListener { clickToDetails?.invoke(newsList[position]) }
-            title.setOnClickListener { clickToDetails?.invoke(newsList[position]) }
-        }
+        holder.binding.root.setOnClickListener { clickToDetails?.invoke(newsList[position]) }
     }
 
     override fun getItemCount(): Int {
