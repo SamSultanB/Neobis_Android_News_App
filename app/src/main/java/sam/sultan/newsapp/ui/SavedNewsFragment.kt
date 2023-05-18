@@ -7,10 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import sam.sultan.newsapp.R
 import sam.sultan.newsapp.RecyclerViewAdapter
 import sam.sultan.newsapp.database.NewsDataBase
 import sam.sultan.newsapp.databinding.FragmentSavedNewsBinding
+import sam.sultan.newsapp.models.Article
 import sam.sultan.newsapp.repository.NewsRepository
 import sam.sultan.newsapp.viewModel.NewsViewModel
 import sam.sultan.newsapp.viewModel.ViewModelFactory
@@ -25,7 +28,6 @@ class SavedNewsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentSavedNewsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,6 +39,9 @@ class SavedNewsFragment : Fragment() {
         viewModel.savedArticles.observe(viewLifecycleOwner, Observer{ articles ->
             adapter.setNewsist(articles)
         })
+
+        adapter.clickToDetails = { clickToDetails(it) }
+
     }
 
     private fun setUpViewModel(){
@@ -49,6 +54,12 @@ class SavedNewsFragment : Fragment() {
         adapter = RecyclerViewAdapter()
         binding.savedRV.layoutManager = LinearLayoutManager(context)
         binding.savedRV.adapter = adapter
+    }
+
+    private fun clickToDetails(article: Article){
+        val bundle = Bundle()
+        bundle.putSerializable("article", article)
+        findNavController().navigate(R.id.action_savedNewsFragment_to_newsDetailsFragment, bundle)
     }
 
 }

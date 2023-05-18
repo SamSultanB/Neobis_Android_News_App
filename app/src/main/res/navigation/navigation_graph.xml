@@ -30,5 +30,9 @@
         android:id="@+id/savedNewsFragment"
         android:name="sam.sultan.newsapp.ui.SavedNewsFragment"
         android:label="fragment_saved_news"
-        tools:layout="@layout/fragment_saved_news" />
+        tools:layout="@layout/fragment_saved_news" >
+        <action
+            android:id="@+id/action_savedNewsFragment_to_newsDetailsFragment"
+            app:destination="@id/newsDetailsFragment" />
+    </fragment>
 </navigation>
