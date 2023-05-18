@@ -1,18 +1,14 @@
 package sam.sultan.newsapp.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavArgs
-import androidx.navigation.NavArgsLazy
-import androidx.navigation.fragment.navArgs
 import sam.sultan.newsapp.database.NewsDataBase
-import sam.sultan.newsapp.databinding.FragmentMainBinding
 import sam.sultan.newsapp.databinding.FragmentNewsDetailsBinding
 import sam.sultan.newsapp.models.Article
 import sam.sultan.newsapp.repository.NewsRepository
