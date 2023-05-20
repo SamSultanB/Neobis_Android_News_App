@@ -9,4 +9,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_background">#E5E5E5</color>
+    <color name="author_text">#FF5151</color>
+    <color name="published_date_color">#A6A7A7</color>
 </resources>

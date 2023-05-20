@@ -7,6 +7,7 @@ import sam.sultan.newsapp.models.News
 import sam.sultan.newsapp.utils.Constants.API_KEY
 
 interface NewsApi {
+
     @GET("v2/top-headlines")
     suspend fun getNews(
         @Query("country") countryCode: String = "us",
