@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="sam.sultan.newsapp.ui.MainFragment"
-        android:label="fragment_main"
+        android:label="Breaking news"
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_mainFragment_to_newsDetailsFragment"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/newsDetailsFragment"
         android:name="sam.sultan.newsapp.ui.NewsDetailsFragment"
-        android:label="fragment_news_details"
+        android:label="Breaking news"
         tools:layout="@layout/fragment_news_details" >
         <argument
             android:name="article"
@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/savedNewsFragment"
         android:name="sam.sultan.newsapp.ui.SavedNewsFragment"
-        android:label="fragment_saved_news"
+        android:label="Saved news"
         tools:layout="@layout/fragment_saved_news" >
         <action
             android:id="@+id/action_savedNewsFragment_to_newsDetailsFragment"

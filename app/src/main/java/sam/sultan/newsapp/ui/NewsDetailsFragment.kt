@@ -8,6 +8,7 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import sam.sultan.newsapp.R
 import sam.sultan.newsapp.database.NewsDataBase
 import sam.sultan.newsapp.databinding.FragmentNewsDetailsBinding
 import sam.sultan.newsapp.models.Article
@@ -19,6 +20,7 @@ class NewsDetailsFragment : Fragment() {
 
     lateinit var binding: FragmentNewsDetailsBinding
     lateinit var viewModel: NewsViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,10 +44,11 @@ class NewsDetailsFragment : Fragment() {
             }
         }
 
-        binding.saveButton.setOnClickListener {
-            article?.let { it1 -> viewModel.saveArtilce(it1) }
-            Toast.makeText(requireContext(), "Successfully saved!", Toast.LENGTH_SHORT).show()
+        if (article?.saved == 1){
+            binding.saveButton.setImageResource(R.drawable.saved_button)
         }
+
+        binding.saveButton.setOnClickListener { article?.let { saveOrDelete(it) } }
 
     }
 
@@ -53,6 +56,18 @@ class NewsDetailsFragment : Fragment() {
         val db = NewsDataBase.getDatabase(requireContext()).getNewsDao()
         val repository = NewsRepository(db)
         viewModel = ViewModelProvider(this, ViewModelFactory(repository)).get(NewsViewModel::class.java)
+    }
+
+    private fun saveOrDelete(article: Article){
+        if (article.saved == 0){
+            article.saved = 1
+            viewModel.saveArtilce(article)
+            binding.saveButton.setImageResource(R.drawable.saved_button)
+        }else{
+            article.saved = 0
+            viewModel.deleteArticle(article)
+            binding.saveButton.setImageResource(R.drawable.save_button)
+        }
     }
 
 }
