@@ -1,12 +1,11 @@
 package sam.sultan.newsapp.database
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import sam.sultan.newsapp.models.Article
-import sam.sultan.newsapp.models.News
 
 @Dao
 interface NewsDao {
@@ -16,5 +15,8 @@ interface NewsDao {
 
     @Query("SELECT * FROM articles")
     fun getAll(): LiveData<List<Article>>
+
+    @Delete
+    suspend fun deleteArticle(article: Article)
 
 }

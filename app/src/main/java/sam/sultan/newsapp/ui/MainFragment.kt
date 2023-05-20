@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -39,8 +40,6 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpViewModel()
         setUpRV()
-
-        showProgressBar()
         setAdapter()
 
         binding.refreshButton.setOnClickListener {
@@ -50,6 +49,17 @@ class MainFragment : Fragment() {
         binding.savedButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_savedNewsFragment)
         }
+
+        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean{
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { viewModel.searchNews(it)}
+                return true
+            }
+
+        })
 
         adapter.clickToDetails = { clickToDetails(it) }
 
@@ -81,7 +91,6 @@ class MainFragment : Fragment() {
                     adapter.setNewsist(it.articles)
                 }
             }else if (response is Resource.Error){
-                showProgressBar()
                 Toast.makeText(requireContext(),response.message, Toast.LENGTH_SHORT).show()
             }else{
                 showProgressBar()
@@ -90,14 +99,12 @@ class MainFragment : Fragment() {
     }
 
     private fun refreshNews(){
-        adapter.setNewsist(listOf())
-        showProgressBar()
         viewModel.getNews()
-        Toast.makeText(requireContext(), "Refresh button is pressed", Toast.LENGTH_SHORT).show()
     }
 
     private fun showProgressBar(){
         binding.progressBar.visibility = View.VISIBLE
+        adapter.setNewsist(listOf())
     }
 
     private fun hideProgressBar(){

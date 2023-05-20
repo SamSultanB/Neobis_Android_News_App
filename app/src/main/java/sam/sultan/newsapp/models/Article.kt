@@ -14,7 +14,8 @@ data class Article(
     val source: Source,
     val title: String,
     val url: String,
-    val urlToImage: String
+    val urlToImage: String,
+    var saved: Int = 0
 ) : java.io.Serializable{
 
     override fun hashCode(): Int {

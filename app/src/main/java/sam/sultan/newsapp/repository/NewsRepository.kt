@@ -12,8 +12,12 @@ class NewsRepository(private val db: NewsDao){
     //api methods
     suspend fun getNews() = RetrofitInstance.api.getNews()
 
+    suspend fun getSearchedNews(query: String) = RetrofitInstance.api.searchNews(query)
+
     //database methods
     suspend fun saveArticle(article: Article) = db.saveArticle(article)
+
+    suspend fun deleteArticle(article: Article) = db.deleteArticle(article)
 
     fun getAllArticles() = db.getAll()
 
