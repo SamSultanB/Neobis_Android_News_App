@@ -40,15 +40,16 @@ class NewsDetailsFragment : Fragment() {
         }else{
             binding.webView.apply {
                 webViewClient = WebViewClient()
-                loadUrl(article.url)
+                loadUrl(article.url!!)
+                if (article.saved == 1){
+                    binding.saveButton.setImageResource(R.drawable.saved_button)
+                }
             }
         }
 
-        if (article?.saved == 1){
-            binding.saveButton.setImageResource(R.drawable.saved_button)
-        }
-
-        binding.saveButton.setOnClickListener { article?.let { saveOrDelete(it) } }
+        binding.saveButton.setOnClickListener { article?.let {
+            saveOrDelete(it)
+        } }
 
     }
 
@@ -64,7 +65,6 @@ class NewsDetailsFragment : Fragment() {
             viewModel.saveArtilce(article)
             binding.saveButton.setImageResource(R.drawable.saved_button)
         }else{
-            article.saved = 0
             viewModel.deleteArticle(article)
             binding.saveButton.setImageResource(R.drawable.save_button)
         }
