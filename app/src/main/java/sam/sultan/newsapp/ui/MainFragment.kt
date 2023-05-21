@@ -40,7 +40,18 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpViewModel()
         setUpRV()
-        setAdapter()
+
+        viewModel.news.observe(viewLifecycleOwner, Observer{response ->
+            showProgressBar()
+            if (response is Resource.Success){
+                hideProgressBar()
+                response.data?.let {
+                    adapter.setNewsist(it.articles)
+                }
+            }else if (response is Resource.Error){
+                Toast.makeText(requireContext(),response.message, Toast.LENGTH_SHORT).show()
+            }
+        })
 
         binding.refreshButton.setOnClickListener {
             refreshNews()
@@ -83,28 +94,13 @@ class MainFragment : Fragment() {
         findNavController().navigate(R.id.action_mainFragment_to_newsDetailsFragment, bundle)
     }
 
-    private fun setAdapter(){
-        viewModel.news.observe(viewLifecycleOwner, Observer{response ->
-            if (response is Resource.Success){
-                hideProgressBar()
-                response.data?.let {
-                    adapter.setNewsist(it.articles)
-                }
-            }else if (response is Resource.Error){
-                Toast.makeText(requireContext(),response.message, Toast.LENGTH_SHORT).show()
-            }else{
-                showProgressBar()
-            }
-        })
-    }
-
     private fun refreshNews(){
+        adapter.setNewsist(listOf())
         viewModel.getNews()
     }
 
     private fun showProgressBar(){
         binding.progressBar.visibility = View.VISIBLE
-        adapter.setNewsist(listOf())
     }
 
     private fun hideProgressBar(){
